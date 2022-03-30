@@ -17,7 +17,13 @@
             <option value="12">12</option>
         </select> <br>
         <div ></div>
-        <h2 v-if="TheValue > 0 & TheMonths > 0">{{ CalcSum() }}</h2>
+        <!-- <h2 v-if="TheValue > 0 & TheMonths > 0">{{ CalcSum() }}</h2> -->
+        <h2 v-for="item in TheMonths" :key="item"> Sum for pay = {{ CalcSum(TheValue,TheMonths) }} // Months' Sum = {{ CalcMonthsSum() }}</h2>
+        <div v-if="+TheMonths > 0">
+        <div v-for="item in +TheMonths" :key="item">{{item}} {{CalcMonthsSum()}}</div>
+        </div>
+        
+        <!-- <button @click="CalcSum()">doba</button> -->
         {{ sumForPay }} // {{ theBabki }}
         <!-- <h3 v-if=""></h3> -->
     </div>
@@ -25,9 +31,6 @@
 </template>
 
 <script>
-
-
-
 export default ({
     data() {
       return {       
@@ -36,20 +39,20 @@ export default ({
           sumForPay : 0,
           theBabki : 0,
           contor : 0
-
       }  
     },
     methods: {
-        CalcSum(){
-            this.sumForPay = this.TheValue / this.TheMonths
-            this.theBabki = this.TheValue
-            if(this.theBabki > 0){
-                this.theBabki -= this.sumForPay
-                //h = document.createElement("div")
-                let text = document.createTextNode(this.theBabki);
-                document.getElementById("mainDiv").appendChild(text)
+        CalcSum(TheValue,TheMonths){
+            this.sumForPay = TheValue / TheMonths;
+            return this.sumForPay;
+            //this.theBabki = this.TheValue
+            // if(this.theBabki > 0){
+            //     this.theBabki -= this.sumForPay
+            //     //h = document.createElement("div")
+            //     let text = document.createTextNode(this.theBabki);
+            //     document.getElementById("mainDiv").appendChild(text)
                 
-            }
+            // }
             // this.contor = this.sumForPay
             // for(let i = 0; i < this.TheMonths; i++){
             //     //this.theBabki.push(this.sumForPay);
@@ -62,9 +65,31 @@ export default ({
             // console.log(this.theBabki)
              
         },
-        computed: {
-
+        CalcMonthsSum(){
+            // if(this.contor > 0){
+            //     return this.contor -= this.sumForPay
+            // }else if(typeof(this.TheMonths) === NaN ){
+            //     alert("dsa")
+            // }else{
+            //     return  this.contor = this.TheValue
+            // }
+                
+            
+            if(this.contor != 0){
+                return this.contor -= this.sumForPay
+            } else if (this.contor == 0) {
+                return this.contor = this.TheValue
+            } else {
+                return this.contor = 0 
+            }
+        },
+        test(){
+            return this.contor++;
         }
+        
+    },
+    computed: {
+    
     }
 })
 </script>
