@@ -1,8 +1,8 @@
 <template>
     <div id="mainDiv">
-        <input id="sum" type="number" min="1" max="4000" placeholder="Type a summ" v-model="TheValue" ><br>
+        <input id="sum" type="number" min="1" max="4000" placeholder="Type a summ" v-model="credit" ><br>
         Select months: 
-        <select itemid="months" name="" id="" v-model="TheMonths">
+        <select nrid="months" name="" id="" v-model="months">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -16,16 +16,20 @@
             <option value="11">11</option>
             <option value="12">12</option>
         </select> <br>
-        <div ></div>
-        <!-- <h2 v-if="TheValue > 0 & TheMonths > 0">{{ CalcSum() }}</h2> -->
-        <h2 v-for="item in TheMonths" :key="item"> Sum for pay = {{ CalcSum(TheValue,TheMonths) }} // Months' Sum = {{ CalcMonthsSum() }}</h2>
-        <div v-if="+TheMonths > 0">
-        <div v-for="item in +TheMonths" :key="item">{{item}} {{CalcMonthsSum()}}</div>
-        </div>
+        <span v-show="false"> {{ CalcSumForPay(credit,months) }} </span>
         
-        <!-- <button @click="CalcSum()">doba</button> -->
-        {{ sumForPay }} // {{ theBabki }}
-        <!-- <h3 v-if=""></h3> -->
+        <table >
+            <tr >
+                <td>Nr. | </td>
+                <td>Month's cost | </td>
+                <td>Remaining </td>
+            </tr>
+            <tr v-for="nr in +months" :key="nr">
+                <td>{{nr}}  </td>
+                <td>{{ sumForPay.toFixed(2) }} </td>
+                <td>{{(+CalcMonthsSum(credit).toFixed(2)  + +sumForPay).toFixed(2) }}</td>
+            </tr>
+        </table>
     </div>
     
 </template>
@@ -34,59 +38,25 @@
 export default ({
     data() {
       return {       
-          TheValue : 0,
-          TheMonths : 0,
+          credit : 0,
+          months : 0,
           sumForPay : 0,
-          theBabki : 0,
-          contor : 0
+          contor : 0,
       }  
     },
     methods: {
-        CalcSum(TheValue,TheMonths){
-            this.sumForPay = TheValue / TheMonths;
-            return this.sumForPay;
-            //this.theBabki = this.TheValue
-            // if(this.theBabki > 0){
-            //     this.theBabki -= this.sumForPay
-            //     //h = document.createElement("div")
-            //     let text = document.createTextNode(this.theBabki);
-            //     document.getElementById("mainDiv").appendChild(text)
-                
-            // }
-            // this.contor = this.sumForPay
-            // for(let i = 0; i < this.TheMonths; i++){
-            //     //this.theBabki.push(this.sumForPay);
-            //     //console.log(this.sumForPay)
-            //     this.theBabki.push(this.sumForPay)
-            //     this.sumForPay += this.contor
-            //     break;
-            // }
-            // this.contor = 0
-            // console.log(this.theBabki)
-             
+        CalcSumForPay(credit,months){
+            this.sumForPay = credit / months;
+            return this.sumForPay;            
         },
-        CalcMonthsSum(){
-            // if(this.contor > 0){
-            //     return this.contor -= this.sumForPay
-            // }else if(typeof(this.TheMonths) === NaN ){
-            //     alert("dsa")
-            // }else{
-            //     return  this.contor = this.TheValue
-            // }
-                
+        CalcMonthsSum(initialSumm){
             
-            if(this.contor != 0){
-                return this.contor -= this.sumForPay
-            } else if (this.contor == 0) {
-                return this.contor = this.TheValue
-            } else {
-                return this.contor = 0 
+            if(this.contor <= 0){
+                this.contor = initialSumm
             }
-        },
-        test(){
-            return this.contor++;
-        }
-        
+            this.contor -= this.sumForPay
+             return this.contor 
+        },       
     },
     computed: {
     
