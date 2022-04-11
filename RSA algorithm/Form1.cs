@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace RSA_algorithm
@@ -10,49 +10,43 @@ namespace RSA_algorithm
             InitializeComponent();
             
         }
-
-        private const bool IncludePrivateParameters = false;
-        UnicodeEncoding unicodeEncoding = new UnicodeEncoding();
-        RSACryptoServiceProvider rSACryptoServiceProvider = new RSACryptoServiceProvider();
-        byte[] data;
-        byte[] encryptData;
-
-        
+        // ----------------========== Заметочка =========-------------------
+        /*Выходной байт выбирается путем поиска значений S(i) и S(j), 
+         * сложения их вместе по модулю 256, а затем поиска суммы в S, 
+         * используется S(S (i) + S (j)) как байт ключевого потока, K.*/
+        public string RC4(string input, string key)
+        {
+            StringBuilder result = new StringBuilder();
+            int x, y, j = 0;
+            int[] box = new int[256];
+            for (int i = 0; i < 256; i++)
+                box[i] = i;
+            for (int i = 0; i < 256; i++)
+            {
+                j = (key[i % key.Length] + box[i] + j) % 256;
+                x = box[i];
+                box[i] = box[j];
+                box[j] = x;
+            }
+            for (int i = 0; i < input.Length; i++)
+            {
+                y = i % 256;
+                j = (box[y] + j) % 256;
+                x = box[y];
+                box[y] = box[j];
+                box[j] = x;
+                result.Append((char)(input[i] ^ box[(box[y] + box[j]) % 256]));
+            }
+            return result.ToString();
+        }
 
         private void encryptBtn_Click(object sender, EventArgs e)
         {
-            data = unicodeEncoding.GetBytes(origText.Text);
-            encryptData = Encrypt(data, rSACryptoServiceProvider.ExportParameters(IncludePrivateParameters), IncludePrivateParameters);
-            encryptText.Text = unicodeEncoding.GetString(encryptData);
-            rSACryptoServiceProvider.ExportParameters(false);
+            encryptText.Text = RC4(origText.Text, "123");
         }
         private void decryptBtn_Click(object sender, EventArgs e)
         {
-            byte[] data = Decrypt(encryptData, rSACryptoServiceProvider.ExportParameters(true), IncludePrivateParameters);
-            decryptedText.Text = unicodeEncoding.GetString(data);
-            rSACryptoServiceProvider.ExportParameters(false);
+            decryptedText.Text = RC4(encryptText.Text, "123");
         }
-        byte[] Encrypt(byte[] data, RSAParameters RSAKey, bool fOAEP)
-        {
-            byte[] encryptedData;
-            using (RSACryptoServiceProvider rSACryptoServiceProvider = new RSACryptoServiceProvider())
-            {
-                rSACryptoServiceProvider.ImportParameters(RSAKey);
-                encryptedData = rSACryptoServiceProvider.Encrypt(data, fOAEP);
-            }
-            return encryptedData;
-        }
-        byte[] Decrypt(byte[] data, RSAParameters RSAKey, bool fOAEP)
-        {
-            byte[] decryptedData;
-            using (RSACryptoServiceProvider rSACryptoServiceProvider = new RSACryptoServiceProvider())
-            {
-                rSACryptoServiceProvider.ImportParameters(RSAKey);
-                decryptedData = rSACryptoServiceProvider.Decrypt(data, fOAEP);
-            }
-            return decryptedData;
-        }        
-
-
     }
 }
