@@ -1,4 +1,4 @@
-﻿namespace RSA_algorithm
+﻿namespace RC4_algorithm
 {
     partial class Form1
     {
@@ -56,7 +56,7 @@
             this.origText.Name = "origText";
             this.origText.Size = new System.Drawing.Size(187, 391);
             this.origText.TabIndex = 1;
-            this.origText.Text = "dffd";
+            this.origText.Text = "";
             // 
             // encryptBtn
             // 

@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace RSA_algorithm
+namespace RC4_algorithm
 {
     public partial class Form1 : Form
     {
